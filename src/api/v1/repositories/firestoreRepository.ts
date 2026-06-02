@@ -47,3 +47,41 @@ export class FirestoreRepository<T extends { id?: string }> {
     return true;
   }
 }
+
+const repositoryFor = <T extends { id?: string }>(collectionName: string) =>
+  new FirestoreRepository<T>(collectionName);
+
+export async function createDocument<T extends { id?: string }>(
+  collectionName: string,
+  data: T
+): Promise<T & { id: string }> {
+  return repositoryFor<T>(collectionName).create(data);
+}
+
+export async function getAllDocuments<T extends { id?: string }>(
+  collectionName: string
+): Promise<(T & { id: string })[]> {
+  return repositoryFor<T>(collectionName).findAll();
+}
+
+export async function getDocumentById<T extends { id?: string }>(
+  collectionName: string,
+  id: string
+): Promise<(T & { id: string }) | null> {
+  return repositoryFor<T>(collectionName).findById(id);
+}
+
+export async function updateDocument<T extends { id?: string }>(
+  collectionName: string,
+  id: string,
+  data: Partial<T>
+): Promise<(T & { id: string }) | null> {
+  return repositoryFor<T>(collectionName).update(id, data);
+}
+
+export async function deleteDocument(
+  collectionName: string,
+  id: string
+): Promise<boolean> {
+  return repositoryFor(collectionName).delete(id);
+}

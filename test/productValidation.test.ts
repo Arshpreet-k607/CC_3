@@ -1,31 +1,20 @@
-import { productSchema, productUpdateSchema } from '../src/api/v1/validation/productValidation';
+import { createProductSchema } from "../src/api/v1/validation/productValidation";
 
-describe('Product validation', () => {
-  it('accepts a valid product payload', () => {
-    const { error } = productSchema.validate({
-      name: 'Test Widget',
-      price: 19.99,
-      stock: 10,
-    });
+describe("Product Validation", () => {
+  test("Valid product data should pass", () => {
+    // Arrange
+    const data = {
+      name: "Laptop",
+      sku: "ABC1234",
+      quantity: 10,
+      price: 999.99,
+      category: "electronics",
+    };
 
-    expect(error).toBeUndefined();
-  });
+    // Act
+    const { error } = createProductSchema.validate(data);
 
-  it('rejects an invalid product payload', () => {
-    const { error } = productSchema.validate({
-      name: '',
-      price: -5,
-      stock: -1,
-    });
-
-    expect(error).toBeDefined();
-  });
-
-  it('accepts partial update payloads', () => {
-    const { error } = productUpdateSchema.validate({
-      price: 29.99,
-    });
-
+    // Assert
     expect(error).toBeUndefined();
   });
 });

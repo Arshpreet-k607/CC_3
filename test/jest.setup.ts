@@ -1,2 +1,14 @@
-// Jest setup file for test environment configuration.
-process.env.NODE_ENV = 'test';
+jest.mock("../src/config/firebaseConfig", () => ({
+    db: {
+        collection: jest.fn(),
+        doc: jest.fn(),
+    },
+}));
+
+afterEach(() => {
+    jest.clearAllMocks();
+});
+
+afterAll(() => {
+    jest.resetModules();
+});

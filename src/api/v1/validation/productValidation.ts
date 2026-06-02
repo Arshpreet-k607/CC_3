@@ -1,15 +1,19 @@
-import Joi from 'joi';
+import Joi from "joi";
 
-export const productSchema = Joi.object({
-  name: Joi.string().trim().min(2).required(),
-  description: Joi.string().trim().allow('', null),
-  price: Joi.number().min(0).required(),
-  stock: Joi.number().integer().min(0).required(),
+const skuPattern: RegExp = /^[A-Z]{3}[0-9]{4}$/;
+const categories = ["electronics", "clothing", "food", "tools", "other"] as const;
+
+export const createProductSchema = Joi.object({
+  name: Joi.string().min(2).max(80).required(),
+  sku: Joi.string().pattern(skuPattern).required(),
+  quantity: Joi.number().integer().min(0).required(),
+  price: Joi.number().positive().precision(2).required(),
+  category: Joi.string().valid(...categories).required(),
 });
 
-export const productUpdateSchema = Joi.object({
-  name: Joi.string().trim().min(2),
-  description: Joi.string().trim().allow('', null),
-  price: Joi.number().min(0),
-  stock: Joi.number().integer().min(0),
+export const updateProductSchema = Joi.object({
+  name: Joi.string().min(2).max(80),
+  quantity: Joi.number().integer().min(0),
+  price: Joi.number().positive(),
+  category: Joi.string().valid(...categories),
 }).min(1);

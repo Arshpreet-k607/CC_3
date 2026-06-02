@@ -1,19 +1,21 @@
-import { Request, Response, NextFunction, RequestHandler } from 'express';
-import { Schema } from 'joi';
+import { Request, Response, NextFunction } from "express";
+import { ObjectSchema } from "joi";
 
-export default function validateRequest(schema: Schema, partial = false): RequestHandler {
-  return (req: Request, res: Response, next: NextFunction) => {
+export const validateRequest =
+  (schema: ObjectSchema) =>
+  (req: Request, res: Response, next: NextFunction) => {
     const { error, value } = schema.validate(req.body, {
       abortEarly: false,
-      allowUnknown: false,
-      presence: partial ? 'optional' : 'required',
+      stripUnknown: true,
     });
 
     if (error) {
-      return res.status(400).json({ errors: error.details.map((detail) => detail.message) });
+      return res.status(400).json({
+        message: "Validation failed",
+        details: error.details.map((d) => d.message),
+      });
     }
 
     req.body = value;
-    return next();
+    next();
   };
-}

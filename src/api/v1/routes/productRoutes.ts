@@ -1,19 +1,38 @@
-import express from 'express';
+import { Router } from "express";
 import {
-  createProduct,
-  getProducts,
+  healthCheck,
+  getAllProducts,
   getProductById,
-  updateProduct,
-  deleteProduct,
-} from '../controllers/productController';
-import validateRequest from '../middleware/validateRequest';
-import { productSchema, productUpdateSchema } from '../validation/productValidation';
+  createProductController,
+  updateProductController,
+  deleteProductController,
+} from "../controllers/productController";
 
-const router = express.Router();
-router.post('/', validateRequest(productSchema), createProduct);
-router.get('/', getProducts);
-router.get('/:id', getProductById);
-router.put('/:id', validateRequest(productUpdateSchema, true), updateProduct);
-router.delete('/:id', deleteProduct);
+import { validateRequest } from "../middleware/validateRequest";
+import {
+  createProductSchema,
+  updateProductSchema,
+} from "../validation/productValidation";
+
+const router = Router();
+
+router.get("/health", healthCheck);
+
+router.get("/products", getAllProducts);
+router.get("/products/:id", getProductById);
+
+router.post(
+  "/products",
+  validateRequest(createProductSchema),
+  createProductController
+);
+
+router.put(
+  "/products/:id",
+  validateRequest(updateProductSchema),
+  updateProductController
+);
+
+router.delete("/products/:id", deleteProductController);
 
 export default router;

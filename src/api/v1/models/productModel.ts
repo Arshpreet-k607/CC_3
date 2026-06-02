@@ -1,9 +1,10 @@
 export interface Product {
-  id?: string;
+  id: string;
   name: string;
-  description?: string;
+  sku: string;
+  quantity: number;
   price: number;
-  stock: number;
-  createdAt?: string;
-  updatedAt?: string;
+  category: "electronics" | "clothing" | "food" | "tools" | "other";
+  createdAt: Date;
+  updatedAt: Date;
 }
